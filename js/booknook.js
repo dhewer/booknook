@@ -18,11 +18,9 @@ jQuery(document).ready(function(){
     let booknook_shortcodeCopy = document.querySelector(".booknook-shortcodeCopy");
     let booknook_copyButton = document.querySelector(".booknook-copyButton");
     if (booknook_shortcodeCopy) {
-        console.log("in");
         booknook_copyButton.addEventListener("click", copyBooknookShortcode, false);
         function copyBooknookShortcode(e) {
             e.preventDefault();
-            console.log("yes");
             booknook_shortcodeCopy.select();
             booknook_shortcodeCopy.setSelectionRange(0, 20);
             navigator.clipboard.writeText(booknook_shortcodeCopy.value);
