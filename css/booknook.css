@@ -1,0 +1,39 @@
+
+/* BookNook Custom CSS */
+
+#booknook-sortables {
+    margin-top: 1rem;
+}
+
+.booknook-color-display {
+    color: white;
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+}
+
+.booknook-cover {
+    background-color: black;
+    border: 1px solid rgba(0 0 0 / 10%);
+    box-shadow: 5px 5px 0 0 rgba(0 0 0 / 10%);
+    box-sizing: border-box;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    float: left;
+    height: 200px;
+    justify-content: space-between;
+    margin: 0 2rem 1rem 0;
+    padding: 1rem;
+    position: relative;
+    text-align: center;
+    text-shadow: 0px 0px 5px rgba(0 0 0 / 85%);
+    width: 150px;
+}
+
+.booknook-cover-title {
+    font-weight: bold;
+}
+
+.booknook-cover-author {
+    font-size: smaller;
+}
