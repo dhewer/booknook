@@ -5,12 +5,15 @@ jQuery(document).ready(function(){
 
     // Automatically display the hex color code in meta box
     let booknook_color = document.querySelector("#booknook_color");
+    let booknook_textcolor = document.querySelector("#booknook_textcolor");
     if (booknook_color) {
         booknook_color.addEventListener("change", updateBooknookColor, false);
+        booknook_textcolor.addEventListener("change", updateBooknookColor, false);
         function updateBooknookColor(e) {
             let display = document.querySelector(".booknook-color-display");
-            display.innerHTML = e.target.value;
-            display.style.backgroundColor = e.target.value;
+            display.innerHTML = booknook_textcolor.value;
+            display.style.backgroundColor = booknook_color.value;
+            display.style.color = booknook_textcolor.value;
         }
     }
 

@@ -24,6 +24,7 @@
     define('BOOKNOOK_COLOR_MAXLENGTH', 7);
     define('BOOKNOOK_HEXCOLOR_REGEX', '/^#[A-Fa-f0-9]{6}$/');
     define('BOOKNOOK_DEFAULT_COLOR', '#000000');
+    define('BOOKNOOK_DEFAULT_TEXTCOLOR', '#FFFFFF');
 
     /**
      * booknook_enqueue_css
@@ -104,6 +105,11 @@
         // Get current values for fields (if any)
         $booknook_author = get_post_meta($post->ID, '_booknook_author', true);
         $booknook_color = get_post_meta($post->ID, '_booknook_color', true);
+        $booknook_textcolor = get_post_meta($post->ID, '_booknook_textcolor', true);
+        // Sanitize input
+        $booknook_author = sanitize_text_field($booknook_author);
+        $booknook_color = sanitize_text_field($booknook_color);
+        $booknook_textcolor = sanitize_text_field($booknook_textcolor);
         // Nonce safety check field
         wp_nonce_field('booknook_meta_edit', 'booknook_nonce');
         // Display meta form fields on add/edit book screen
@@ -114,7 +120,14 @@
         </p>
         <p>
             <label for="booknook_color"><?= __('Book cover background color') ?></label>
-            <input type="color" id="booknook_color" name="booknook_color" maxlength="6" pattern="[A-Fa-f0-9]{6}" style="max-width:6em;" value="<?= $booknook_color ?>"> <span class="booknook-color-display" style="background-color: <?= $booknook_color ?>;"><?= $booknook_color ?></span>
+            <input type="color" id="booknook_color" name="booknook_color" maxlength="6" pattern="[A-Fa-f0-9]{6}" style="max-width:6em;" value="<?= $booknook_color ?>">
+        </p>
+        <p>
+            <label for="booknook_textcolor"><?= __('Book cover text color') ?></label>
+            <input type="color" id="booknook_textcolor" name="booknook_textcolor" maxlength="6" pattern="[A-Fa-f0-9]{6}" style="max-width:6em;" value="<?= $booknook_textcolor ?>">
+        </p>
+        <p>
+            <?= __('Preview:') ?> <span class="booknook-color-display" style="background-color: <?= $booknook_color ?>;color: <?= $booknook_textcolor ?>"><?= $booknook_textcolor ?></span>
         </p>
         <?php
             if ($post_status !== 'auto-draft') {
@@ -152,13 +165,22 @@
             $author = substr(sanitize_text_field($_POST['booknook_author']), 0, BOOKNOOK_AUTHOR_MAXLENGTH);
             update_post_meta($post_id, '_booknook_author', $author);
         }
-        // Color meta update
+        // Background color meta update
         if (array_key_exists('booknook_color', $_POST)) {
             $color = substr($_POST['booknook_color'], 0, BOOKNOOK_COLOR_MAXLENGTH);
             // Confirm pattern matches hex color
             preg_match(BOOKNOOK_HEXCOLOR_REGEX, $color, $formatted);
             if (!empty($formatted)) {
                 update_post_meta($post_id, '_booknook_color', $color);
+            }
+        }
+        // Text color meta update
+        if (array_key_exists('booknook_textcolor', $_POST)) {
+            $color = substr($_POST['booknook_textcolor'], 0, BOOKNOOK_COLOR_MAXLENGTH);
+            // Confirm pattern matches hex color
+            preg_match(BOOKNOOK_HEXCOLOR_REGEX, $color, $formatted);
+            if (!empty($formatted)) {
+                update_post_meta($post_id, '_booknook_textcolor', $color);
             }
         }
     }
@@ -190,18 +212,23 @@
         $title = $book['post_title'];
         $author = get_post_meta($id, '_booknook_author', true);
         $color = get_post_meta($id, '_booknook_color', true);
+        $textcolor = get_post_meta($id, '_textbooknook_color', true);
         // Sanitize fields
         $title = empty($title) ? '' : esc_html($title);
         $author = empty($author) ? '' : esc_html($author);
-        // Make sure color contains a valid hex color
+        // Make sure colors contains a valid hex colors
         preg_match(BOOKNOOK_HEXCOLOR_REGEX, $color, $formatted);
         if (empty($formatted)) {
             $color = BOOKNOOK_DEFAULT_COLOR;
         }
+        preg_match(BOOKNOOK_HEXCOLOR_REGEX, $textcolor, $formatted);
+        if (empty($formatted)) {
+            $textcolor = BOOKNOOK_DEFAULT_TEXTCOLOR;
+        }
         // Generate the shortcode template html to return
         ob_start();
         ?>
-        <span class="booknook-cover" style="background-color: <?= $color ?>;">
+        <span class="booknook-cover" style="background-color: <?= $color ?>;color: <?= $textcolor ?>">
             <span class="booknook-cover-title"><?= $title ?></span>
             <span class="booknook-cover-author"><?= __('By') ?> <?= $author ?></span>
         </span>
